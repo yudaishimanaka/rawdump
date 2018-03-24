@@ -1,2 +1,4 @@
 # PcapGo
-Go raw socket packet capture
+Raw socket packet capture.
+
+Golang
