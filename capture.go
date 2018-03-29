@@ -11,7 +11,7 @@ func main() {
 	const proto = (syscall.ETH_P_ALL<<8)&0xff00 | syscall.ETH_P_ALL>>8
 
 	// Make buffer
-	buffer := make([]byte, 6+6+4+2+8192+4)
+	buffer := make([]byte, 4*1024)
 
 	// Create socket
 	sock, err := syscall.Socket(syscall.AF_PACKET, syscall.SOCK_RAW, proto)
@@ -44,7 +44,7 @@ func main() {
 		if err != nil {
 			log.Println(err)
 		}
-		log.Printf("%v received from %#v\n", data, peer)
+		log.Println(data, peer)
 	}
 
 }
