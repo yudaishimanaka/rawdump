@@ -19,7 +19,14 @@ func main() {
 
 	defer syscall.Close(fd)
 
-	interfaceIndex, err := net.InterfaceByName("wlp3s0")
+	if len(os.Args) != 2 {
+		err := "device not found. please check machine interface."
+		log.Fatal(err)
+	}
+
+	interfaceName := string(os.Args[1])
+
+	interfaceIndex, err := net.InterfaceByName(interfaceName)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,7 +36,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err := syscall.SetLsfPromisc("wlp3s0", true); err != nil {
+	if err := syscall.SetLsfPromisc(interfaceName, true); err != nil {
 		log.Fatal(err)
 	}
 
