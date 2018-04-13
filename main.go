@@ -46,6 +46,8 @@ func main() {
 		buffer := make([]byte, 1024)
 		num, _ := file.Read(buffer)
 
-		log.Printf("% X\n", buffer[:num])
+		binaryData := buffer[:num]
+
+		log.Printf("%X \n", binaryData)
 	}
 }
