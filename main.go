@@ -5,7 +5,6 @@ import (
 	"os"
 	"syscall"
 	"net"
-	"fmt"
 )
 
 func htons(host uint16) uint16 {
