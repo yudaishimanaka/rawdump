@@ -44,11 +44,10 @@ func main() {
 
 	for {
 		buffer := make([]byte, 1024)
-		size := len(buffer)
 		num, _ := file.Read(buffer)
 
 		binaryData := buffer[:num]
 
-		log.Printf("%X \n", binaryData)
+		analyzePacket(binaryData, num)
 	}
 }
