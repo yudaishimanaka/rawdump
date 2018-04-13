@@ -5,6 +5,7 @@ import (
 	"os"
 	"syscall"
 	"net"
+	"fmt"
 )
 
 func htons(host uint16) uint16 {
@@ -44,6 +45,7 @@ func main() {
 
 	for {
 		buffer := make([]byte, 1024)
+		size := len(buffer)
 		num, _ := file.Read(buffer)
 
 		binaryData := buffer[:num]
