@@ -11,6 +11,7 @@ func uint16ToByte(value uint16) (b []byte) {
 }
 
 func analyzeArp(buf []byte, num int) (err error) {
+	// marshal arp header
 	hardwareType := binary.BigEndian.Uint16(buf[:2])
 	protoType := binary.BigEndian.Uint16(buf[2:4])
 	macAddrLen := buf[4:5]
@@ -22,15 +23,15 @@ func analyzeArp(buf []byte, num int) (err error) {
 	targetIpAddr := buf[24:28]
 	paddingData := buf[28:num]
 	ah := &ArpHeader{
-		HardwareType: hardwareType,
-		ProtoType: protoType,
-		MacAddrLen: macAddrLen[0],
-		IpAddrLen: ipAddrLen[0],
+		HardwareType:  hardwareType,
+		ProtoType:     protoType,
+		MacAddrLen:    macAddrLen[0],
+		IpAddrLen:     ipAddrLen[0],
 		OperationCode: operationCode,
 		SenderMacAddr: senderMacAddr,
-		SenderIpAddr: senderIpAddr,
+		SenderIpAddr:  senderIpAddr,
 		TargetMacAddr: targetMacAddr,
-		TargetIpAddr: targetIpAddr,
+		TargetIpAddr:  targetIpAddr,
 	}
 	printArp(ah, paddingData)
 	return nil
@@ -45,6 +46,7 @@ func analyzeIpv6(buf []byte, num int) (err error) {
 }
 
 func analyzePacket(buf []byte, num int) (err error) {
+	// marshal ether header
 	dstMacAddr := buf[:6]
 	srcMacAddr := buf[6:12]
 	protoType := binary.BigEndian.Uint16(buf[12:14])
@@ -52,9 +54,10 @@ func analyzePacket(buf []byte, num int) (err error) {
 	eh := &EtherHeader{
 		DstMacAddr: dstMacAddr,
 		SrcMacAddr: srcMacAddr,
-		ProtoType: protoType,
+		ProtoType:  protoType,
 	}
 
+	// check ether protocol type and switch case
 	switch eh.ProtoType {
 	case EthTypeArp:
 		printEther(eh)
