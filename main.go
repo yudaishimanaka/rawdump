@@ -7,6 +7,11 @@ import (
 	"net"
 )
 
+const (
+	exitCodeOk = iota
+	exitCodeErr
+)
+
 func htons(host uint16) uint16 {
 	return (host&0xff)<<8 | (host >> 8)
 }
@@ -44,10 +49,19 @@ func main() {
 
 	for {
 		buffer := make([]byte, 1024)
-		num, _ := file.Read(buffer)
+		num, err := file.Read(buffer)
+		if err != nil {
+			log.Fatal(err)
+			break
+		} else {
+			binaryData := buffer[:num]
 
-		binaryData := buffer[:num]
-
-		analyzePacket(binaryData, num)
+			err := analyzePacket(binaryData, num)
+			if err != nil {
+				log.Fatal(err)
+				break
+			}
+		}
 	}
+	os.Exit(exitCodeOk)
 }
