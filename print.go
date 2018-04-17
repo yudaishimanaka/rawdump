@@ -78,3 +78,16 @@ func printIpv4(ih *IpHeader) {
 	fmt.Println("DstIpAddr:", ih.DstIpAddr)
 	fmt.Printf("-------------------------------\n")
 }
+
+func printIpv6(ih6 *Ipv6Header) {
+	fmt.Printf("-------------IPv6--------------\n")
+	fmt.Printf("Version: %X\n", ih6.Ipv6Version)
+	fmt.Printf("TrafficClass: %X\n", ih6.TrafficClass)
+	fmt.Printf("FlowLabel: 0x%x\n", ih6.FlowLabel)
+	fmt.Println("PayloadLen:", ih6.PayloadLen)
+	fmt.Println("NextHeader:", ih6.NextHeader)
+	fmt.Println("HopLimit:", ih6.HopLimit)
+	fmt.Println("SrcIpv6Addr:", ih6.SrcIpv6Addr)
+	fmt.Println("DstIpv6Addr:", ih6.DstIpv6Addr)
+	fmt.Printf("-------------------------------\n")
+}
