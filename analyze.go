@@ -70,21 +70,23 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 		DstIpAddr: dstIpAddr,
 	}
 
-	printIpv4(ih)
 	switch ih.NextProto {
 	case ProtoTypeIcmp:
+		printIpv4(ih)
 		err := analyzeIcmp(upLayerData, num)
 		if err != nil {
 			return err
 		}
 
 	case ProtoTypeTcp:
+		printIpv4(ih)
 		err := analyzeTcp(upLayerData, num)
 		if err != nil {
 			return err
 		}
 
 	case ProtoTypeUdp:
+		printIpv4(ih)
 		err := analyzeUdp(upLayerData, num)
 		if err != nil {
 			return err
