@@ -32,12 +32,28 @@ func printEther(eh *EtherHeader) {
 
 func printArp(ah *ArpHeader, pd []byte) {
 	// print arp header and padding data
+	t := uint16ToByte(ah.ProtoType)
 	fmt.Printf("--------------Arp--------------\n")
 	fmt.Printf("HardwareType: %X\n", ah.HardwareType)
-	fmt.Printf("ProtoType: %X\n", ah.ProtoType)
+	fmt.Printf("ProtoType: IP(%X)\n", t)
 	fmt.Printf("MacAddrLen: %X\n", ah.MacAddrLen)
 	fmt.Printf("IpAddrLen: %X\n", ah.IpAddrLen)
-	fmt.Printf("OperationCode: %X\n", ah.OperationCode)
+	switch ah.OperationCode {
+	case OpCodeRequest:
+		fmt.Printf("OprationCode: %X(request)\n", ah.OperationCode)
+
+	case OpCodeReply:
+		fmt.Printf("OprationCode: %X(reply)\n", ah.OperationCode)
+
+	case OpCodeReqRev:
+		fmt.Printf("OprationCode: %X(request reverse)\n", ah.OperationCode)
+
+	case OpCodeRepRev:
+		fmt.Printf("OprationCode: %X(reply reverse)\n", ah.OperationCode)
+
+	default:
+		fmt.Printf("OprationCode: %X(Unknown)\n", ah.OperationCode)
+	}
 	fmt.Println("SenderMacAddr: ", ah.SenderMacAddr)
 	fmt.Println("SenderIpAddr: ", ah.SenderIpAddr)
 	fmt.Println("TargetMacAddr: ", ah.TargetMacAddr)
