@@ -38,7 +38,7 @@ func analyzeArp(buf []byte, num int) (err error) {
 }
 
 func analyzeIpv4(buf []byte, num int) (err error) {
-	// marshal IP header
+	// marshal IP(v4) header
 	var version, ihl, flags uint8
 	var offset uint16
 	version = buf[:1][0]>>4
@@ -70,6 +70,7 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 		DstIpAddr: dstIpAddr,
 	}
 
+	// check ip protocol type and switch case
 	switch ih.NextProto {
 	case ProtoTypeIcmp:
 		printIpv4(ih)
@@ -91,12 +92,64 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 		if err != nil {
 			return err
 		}
+
+	default:
+		printIpv4(ih)
 	}
 	return nil
 }
 
 func analyzeIpv6(buf []byte, num int) (err error) {
+	// marshal IPv6 header
+	var trafficClass uint16
+	var flowLabel uint32
+	ip6Version := buf[:1][0]>>4
+	trafficClass = binary.BigEndian.Uint16(buf[:2])<<4>>8
+	flowLabel = binary.BigEndian.Uint32(buf[:4])<<12>>12
+	payloadLen := binary.BigEndian.Uint16(buf[4:6])
+	nextHeader := buf[6:7][0]
+	hopLimit := buf[7:8][0]
+	srcIp6Addr := buf[8:24]
+	dstIp6Addr := buf[24:40]
+	upLayerData := buf[40:num]
 
+	ih6 := &Ipv6Header{
+		Ipv6Version: ip6Version,
+		TrafficClass: trafficClass,
+		FlowLabel: flowLabel,
+		PayloadLen: payloadLen,
+		NextHeader: nextHeader,
+		HopLimit: hopLimit,
+		SrcIpv6Addr: srcIp6Addr,
+		DstIpv6Addr: dstIp6Addr,
+	}
+
+	// check ipv6 protocol type and switch case
+	switch ih6.NextHeader {
+	case NxtHeadIcmp6:
+		printIpv6(ih6)
+		err := analyzeIcmp(upLayerData, num)
+		if err != nil {
+			return err
+		}
+
+	case NxtHeadTcp:
+		printIpv6(ih6)
+		err := analyzeTcp(upLayerData, num)
+		if err != nil {
+			return err
+		}
+
+	case NxtHeadUdp:
+		printIpv6(ih6)
+		err := analyzeUdp(upLayerData, num)
+		if err != nil {
+			return err
+		}
+
+	default:
+		printIpv6(ih6)
+	}
 	return nil
 }
 

@@ -56,6 +56,7 @@ func main() {
 
 	// loop analyze raw packet
 	for {
+		// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
 		buffer := make([]byte, 4096)
 		num, err := file.Read(buffer)
 		if err != nil {
