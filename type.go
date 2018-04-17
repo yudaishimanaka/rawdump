@@ -15,13 +15,13 @@ const (
 	OpCodeReqRev	uint16 = 0x0003
 	OpCodeRepRev	uint16 = 0x0004
 
-	ProtoTypeIcmp uint16 = 0x01
-	ProtoTypeTcp  uint16 = 0x06
-	ProtoTypeUdp  uint16 = 0x11
+	ProtoTypeIcmp uint8 = 0x01
+	ProtoTypeTcp  uint8 = 0x06
+	ProtoTypeUdp  uint8 = 0x11
 
-	NxtHeadIcmp6 uint16 = 0x3a
-	NxtHeadTcp   uint16 = 0x06
-	NxtHeadUdp   uint16 = 0x11
+	NxtHeadIcmp6 uint8 = 0x3a
+	NxtHeadTcp   uint8 = 0x06
+	NxtHeadUdp   uint8 = 0x11
 
 	IcmpEchoReply  uint16 = 0x00
 	IcmpDstUnreach uint16 = 0x03
