@@ -38,6 +38,43 @@ func analyzeArp(buf []byte, num int) (err error) {
 }
 
 func analyzeIpv4(buf []byte, num int) (err error) {
+	// marshal IP header
+	var version, ihl, flags uint8
+	var offset uint16
+	version = buf[:1][0]>>4
+	ihl = buf[:1][0]<<4>>4
+	serviceType := buf[1:2][0]
+	totalLen := binary.BigEndian.Uint16(buf[2:4])
+	identification := binary.BigEndian.Uint16(buf[4:6])
+	flags = buf[6:7][0]>>5
+	offset = binary.BigEndian.Uint16(buf[6:8])<<3>>3
+	ttl := buf[8:9][0]
+	nextProto := buf[9:10][0]
+	checkSum := binary.BigEndian.Uint16(buf[10:12])
+	srcIpAddr := buf[12:16]
+	dstIpAddr := buf[16:20]
+	upLayerData := buf[20:num]
+
+	ih := &IpHeader{
+		IpVersion: version,
+		HeaderLen: ihl,
+		ServiceType: serviceType,
+		TotalLen: totalLen,
+		Identification: identification,
+		Flags: flags,
+		FragmentOffset: offset,
+		TTL: ttl,
+		NextProto: nextProto,
+		CheckSum: checkSum,
+		SrcIpAddr: srcIpAddr,
+		DstIpAddr: dstIpAddr,
+	}
+
+	printIpv4(ih)
+	switch ih.NextProto {
+	case ProtoTypeIcmp:
+
+	}
 	return nil
 }
 
