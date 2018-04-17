@@ -39,7 +39,7 @@ type IpHeader struct {
 
 type Ipv6Header struct {
 	Ipv6Version  uint8
-	TrafficClass uint8
+	TrafficClass uint16
 	FlowLabel    uint32
 	PayloadLen   uint16
 	NextHeader   uint8
