@@ -61,3 +61,20 @@ func printArp(ah *ArpHeader, pd []byte) {
 	fmt.Printf("PaddingData: %X\n", pd)
 	fmt.Printf("-------------------------------\n")
 }
+
+func printIpv4(ih *IpHeader) {
+	fmt.Printf("--------------IP---------------\n")
+	fmt.Printf("Version: %X\n", ih.IpVersion)
+	fmt.Printf("IHL: %X\n", ih.HeaderLen)
+	fmt.Printf("ServiceType: %X\n", ih.ServiceType)
+	fmt.Println("TotalLen:", ih.TotalLen)
+	fmt.Println("Identification:", ih.Identification)
+	fmt.Printf("Flags: %X\n", ih.Flags)
+	fmt.Printf("Offset: %X\n", ih.FragmentOffset)
+	fmt.Println("TTL:", ih.TTL)
+	fmt.Println("Protocol:", ih.NextProto)
+	fmt.Printf("CheckSum: 0x%x\n", ih.CheckSum)
+	fmt.Println("SrcIpAddr:", ih.SrcIpAddr)
+	fmt.Println("DstIpAddr:", ih.DstIpAddr)
+	fmt.Printf("-------------------------------\n")
+}
