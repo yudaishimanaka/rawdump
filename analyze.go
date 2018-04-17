@@ -73,12 +73,40 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 	printIpv4(ih)
 	switch ih.NextProto {
 	case ProtoTypeIcmp:
+		err := analyzeIcmp(upLayerData, num)
+		if err != nil {
+			return err
+		}
 
+	case ProtoTypeTcp:
+		err := analyzeTcp(upLayerData, num)
+		if err != nil {
+			return err
+		}
+
+	case ProtoTypeUdp:
+		err := analyzeUdp(upLayerData, num)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
 
 func analyzeIpv6(buf []byte, num int) (err error) {
+
+	return nil
+}
+
+func analyzeIcmp(buf []byte, num int) (err error) {
+	return nil
+}
+
+func analyzeTcp(buf []byte, num int) (err error) {
+	return nil
+}
+
+func analyzeUdp(buf []byte, num int) (err error) {
 	return nil
 }
 
