@@ -56,7 +56,7 @@ func main() {
 
 	// loop analyze raw packet
 	for {
-		buffer := make([]byte, 1024)
+		buffer := make([]byte, 4096)
 		num, err := file.Read(buffer)
 		if err != nil {
 			log.Fatal(err)
