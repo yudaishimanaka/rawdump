@@ -171,7 +171,35 @@ func analyzeIcmp(buf []byte, num int) (err error) {
 }
 
 func analyzeTcp(buf []byte, num int) (err error) {
+	// marshal tcp header
+	var headerLen, ctrlFlag uint8
+	var reservation uint16
+	srcPort := binary.BigEndian.Uint16(buf[:2])
+	dstPort := binary.BigEndian.Uint16(buf[2:4])
+	seqNum := binary.BigEndian.Uint32(buf[4:8])
+	ackNum := binary.BigEndian.Uint32(buf[8:12])
+	headerLen = buf[12:13][0]>>4
+	reservation = binary.BigEndian.Uint16(buf[12:14])<<4>>10
+	ctrlFlag = buf[13:14][0]<<2>>2
+	windowSize := binary.BigEndian.Uint16(buf[14:16])
+	checkSum := binary.BigEndian.Uint16(buf[16:18])
+	urgPointer := binary.BigEndian.Uint16(buf[18:20])
+	data := buf[20:num]
 
+	tcph := &TCPHeader{
+		SrcPortNum: srcPort,
+		DstPortNum: dstPort,
+		SequenceNum: seqNum,
+		AckNwlNum: ackNum,
+		HeaderLen: headerLen,
+		Reservation: reservation,
+		CtrlFlag: ctrlFlag,
+		WindowSize: windowSize,
+		CheckSum: checkSum,
+		UrgPointer: urgPointer,
+	}
+
+	printTcp(tcph, data)
 	return nil
 }
 

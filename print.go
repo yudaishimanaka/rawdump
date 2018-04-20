@@ -117,3 +117,19 @@ func printIcmp(icmph *ICMPHeader, data []byte) {
 	fmt.Printf("CheckSum: %X\n", icmph.CheckSum)
 	fmt.Printf("ICMPData: %X\n", data)
 }
+
+func printTcp(tcph *TCPHeader, data []byte) {
+	fmt.Printf("--------------TCP--------------\n")
+	fmt.Println("SrcPort:", tcph.SrcPortNum)
+	fmt.Println("DstPort:", tcph.DstPortNum)
+	fmt.Println("SequenceNum:", tcph.SequenceNum)
+	fmt.Println("AckNwNum:", tcph.AckNwlNum)
+	fmt.Println("HeaderLen:", tcph.HeaderLen)
+	fmt.Printf("Reservation: %x\n", tcph.Reservation)
+	fmt.Printf("CtrlFlag: %x\n", tcph.CtrlFlag)
+	fmt.Println("WindowSize:", tcph.WindowSize)
+	fmt.Printf("CheckSum: 0x%x\n", tcph.CheckSum)
+	fmt.Printf("UrgPointer: %x\n", tcph.UrgPointer)
+	fmt.Printf("Data: %x\n", data)
+	fmt.Printf("-------------------------------\n")
+}
