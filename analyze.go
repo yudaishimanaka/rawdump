@@ -204,6 +204,21 @@ func analyzeTcp(buf []byte, num int) (err error) {
 }
 
 func analyzeUdp(buf []byte, num int) (err error) {
+	// marshal udp header
+	srcPort := binary.BigEndian.Uint16(buf[:2])
+	dstPort := binary.BigEndian.Uint16(buf[2:4])
+	packetLen := binary.BigEndian.Uint16(buf[4:6])
+	checkSum := binary.BigEndian.Uint16(buf[6:8])
+	data := buf[8:num]
+
+	udph := &UDPHeader{
+		SrcPortNum: srcPort,
+		DstPortNum: dstPort,
+		PacketLen: packetLen,
+		CheckSum: checkSum,
+	}
+
+	printUdp(udph, data)
 	return nil
 }
 

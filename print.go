@@ -133,3 +133,12 @@ func printTcp(tcph *TCPHeader, data []byte) {
 	fmt.Printf("Data: %x\n", data)
 	fmt.Printf("-------------------------------\n")
 }
+
+func printUdp(udph *UDPHeader, data []byte) {
+	fmt.Printf("--------------UCP--------------\n")
+	fmt.Println("SrcPort:", udph.SrcPortNum)
+	fmt.Println("DstPort:", udph.DstPortNum)
+	fmt.Println("PacketLen:", udph.PacketLen)
+	fmt.Printf("CheckSum: 0x%x\n", udph.CheckSum)
+	fmt.Printf("-------------------------------\n")
+}
