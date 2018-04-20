@@ -21,13 +21,13 @@ const (
 	NxtHeadTcp   uint8 = 0x06
 	NxtHeadUdp   uint8 = 0x11
 
-	IcmpEchoReply  uint16 = 0x00
-	IcmpDstUnreach uint16 = 0x03
-	IcmpRedirect   uint16 = 0x05
-	IcmpEchoReq    uint16 = 0x08
-	IcmpExceeded   uint16 = 0x0b
+	IcmpEchoReply  uint8 = 0x00
+	IcmpDstUnreach uint8 = 0x03
+	IcmpRedirect   uint8 = 0x05
+	IcmpEchoReq    uint8 = 0x08
+	IcmpExceeded   uint8 = 0x0b
 
-	Icmp6DstUnreath uint16 = 0x01
-	Icmp6Echoreq    uint16 = 0x80
-	Icmp6Echoreply  uint16 = 0x81
+	Icmp6DstUnreath uint8 = 0x01
+	Icmp6Echoreq    uint8 = 0x80
+	Icmp6Echoreply  uint8 = 0x81
 )
