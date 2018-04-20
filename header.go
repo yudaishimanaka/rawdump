@@ -60,6 +60,7 @@ type TCPHeader struct {
 	SequenceNum uint32
 	AckNwlNum   uint32
 	HeaderLen   uint8
+	Reservation	uint16
 	CtrlFlag    uint8
 	WindowSize  uint16
 	CheckSum    uint16
