@@ -91,3 +91,29 @@ func printIpv6(ih6 *Ipv6Header) {
 	fmt.Println("DstIpv6Addr:", ih6.DstIpv6Addr)
 	fmt.Printf("-------------------------------\n")
 }
+
+func printIcmp(icmph *ICMPHeader, data []byte) {
+	fmt.Printf("-------------ICMP--------------\n")
+	switch icmph.ICMPType {
+	case IcmpEchoReply:
+		fmt.Printf("Type: Echo Reply(0x%x)\n", icmph.ICMPType)
+
+	case IcmpDstUnreach:
+		fmt.Printf("Type: Dst Unreach(0x%x)\n", icmph.ICMPType)
+
+	case IcmpRedirect:
+		fmt.Printf("Type: Redirect(0x%x)\n", icmph.ICMPType)
+
+	case IcmpEchoReq:
+		fmt.Printf("Type: Echo Request(0x%x)\n", icmph.ICMPType)
+
+	case IcmpExceeded:
+		fmt.Printf("Type: Time Exceeded(0x%x)\n", icmph.ICMPType)
+
+	default:
+		fmt.Printf("Type: Unknown(%X)\n", icmph.ICMPType)
+	}
+	fmt.Printf("ICMPCode: %X\n", icmph.ICMPCode)
+	fmt.Printf("CheckSum: %X\n", icmph.CheckSum)
+	fmt.Printf("ICMPData: %X\n", data)
+}

@@ -154,10 +154,24 @@ func analyzeIpv6(buf []byte, num int) (err error) {
 }
 
 func analyzeIcmp(buf []byte, num int) (err error) {
+	// marshal icmp header
+	icmpType := buf[:1][0]
+	icmpCode := buf[1:2][0]
+	checkSum := binary.BigEndian.Uint16(buf[2:4])
+	data := buf[4:num]
+
+	icmph := &ICMPHeader{
+		ICMPType: icmpType,
+		ICMPCode: icmpCode,
+		CheckSum: checkSum,
+	}
+
+	printIcmp(icmph, data)
 	return nil
 }
 
 func analyzeTcp(buf []byte, num int) (err error) {
+
 	return nil
 }
 
