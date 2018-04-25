@@ -95,16 +95,16 @@ func printIpv6(ih6 *Ipv6Header) {
 func printIcmp(icmph *ICMPHeader, data []byte) {
 	fmt.Printf("-------------ICMP--------------\n")
 	switch icmph.ICMPType {
-	case IcmpEchoReply:
+	case IcmpEchoReply | Icmp6Echoreply:
 		fmt.Printf("Type: Echo Reply(0x%x)\n", icmph.ICMPType)
 
-	case IcmpDstUnreach:
+	case IcmpDstUnreach | Icmp6DstUnreath:
 		fmt.Printf("Type: Dst Unreach(0x%x)\n", icmph.ICMPType)
 
 	case IcmpRedirect:
 		fmt.Printf("Type: Redirect(0x%x)\n", icmph.ICMPType)
 
-	case IcmpEchoReq:
+	case IcmpEchoReq | Icmp6Echoreq:
 		fmt.Printf("Type: Echo Request(0x%x)\n", icmph.ICMPType)
 
 	case IcmpExceeded:
