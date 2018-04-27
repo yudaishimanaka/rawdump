@@ -108,7 +108,7 @@ func main() {
     // create capture start button
     // create interface namei
     var ifaceName string
-    runButton := gtk.NewButtonWithLabel("Start")
+    runButton := gtk.NewButtonWithLabel("Start Capture")
     runButton.Connect("clicked", func() {
         for _, obj := range buttonlist {
             if obj.GetActive() == true {
