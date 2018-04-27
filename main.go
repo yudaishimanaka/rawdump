@@ -5,6 +5,8 @@ import (
 	"net"
 	"os"
 	"syscall"
+	"fmt"
+	"time"
 )
 
 const (
@@ -58,12 +60,14 @@ func main() {
 	for {
 		// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
 		buffer := make([]byte, 4096)
+		now := time.Now()
 		num, err := file.Read(buffer)
 		if err != nil {
 			log.Fatal(err)
 			break
 		} else {
 			binaryData := buffer[:num]
+			fmt.Printf("%d:%d:%d.%d\n", now.Hour(), now.Minute(), now.Second(), now.Nanosecond())
 
 			err := analyzePacket(binaryData, num)
 			if err != nil {

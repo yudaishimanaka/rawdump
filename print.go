@@ -116,6 +116,7 @@ func printIcmp(icmph *ICMPHeader, data []byte) {
 	fmt.Printf("ICMPCode: %X\n", icmph.ICMPCode)
 	fmt.Printf("CheckSum: %X\n", icmph.CheckSum)
 	fmt.Printf("ICMPData: %X\n", data)
+	fmt.Printf("-------------------------------\n")
 }
 
 func printTcp(tcph *TCPHeader, data []byte) {
