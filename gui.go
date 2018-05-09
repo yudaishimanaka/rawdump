@@ -6,9 +6,21 @@ import (
 
     "github.com/mattn/go-gtk/glib"
     "github.com/mattn/go-gtk/gtk"
+    "runtime"
+    "github.com/mattn/go-gtk/gdk"
+    "time"
 )
 
-func capture(window *gtk.Window, ifaceName string) {
+func htons(host uint16) uint16 {
+    return (host&0xff)<<8 | (host >> 8)
+}
+
+func capture(window *gtk.Window, ifaceName string) (err error) {
+    runtime.GOMAXPROCS(10)
+    glib.ThreadInit(nil)
+    gdk.ThreadsInit()
+    gdk.ThreadsEnter()
+    gtk.Init(nil)
     children := window.GetChild()
     children.Destroy()
     window.SetPosition(gtk.WIN_POS_CENTER)
@@ -33,36 +45,34 @@ func capture(window *gtk.Window, ifaceName string) {
     treeview.AppendColumn(gtk.NewTreeViewColumnWithAttributes("Info", gtk.NewCellRendererText(), "text", 5))
 
     var iter gtk.TreeIter
-    store.Append(&iter)
-    store.Set(&iter,
-        0, "0",
-        1, "0.12345678",
-        2, "10.10.10.10",
-        3, "20.20.20.20",
-        4, "TCP",
-        5, "Application Data",
-    )
-    store.Append(&iter)
-    store.Set(&iter,
-        0, "1",
-        1, "0.23456789",
-        2, "11.11.11.11",
-        3, "22.22.22.22",
-        4, "UDP",
-        5, "51065 →  51065 Len=132",
-    )
-    store.Append(&iter)
-    store.Set(&iter,
-        0, "2",
-        1, "0.34567891",
-        2, "12.12.12.12",
-        3, "23.23.23.23",
-        4, "ARP",
-        5, "Who has 23.23.23.23? Tell 12.12.12.12",
-    )
+
+    // show window
     window.Add(swin)
     window.ShowAll()
+
+    go func() {
+        for {
+            gdk.ThreadsEnter()
+            adj := swin.GetVAdjustment()
+            store.Append(&iter)
+            store.Set(&iter,
+                0, "0",
+                1, "0.12345678",
+                2, "10.10.10.10",
+                3, "20.20.20.20",
+                4, "TCP",
+                5, "Application Data",
+            )
+            adj.SetValue(adj.GetUpper() - adj.GetPageSize())
+            gdk.ThreadsLeave()
+            time.Sleep(500 * time.Millisecond)
+        }
+        gtk.MainQuit()
+    }()
+
     gtk.Main()
+
+    return nil
 }
 
 func main() {
