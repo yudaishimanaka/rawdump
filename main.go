@@ -2,12 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net"
 	"os"
 	"syscall"
-	"time"
 )
 
 const (
@@ -68,22 +66,48 @@ func main() {
 	file := os.NewFile(uintptr(fd), "")
 
 	// loop analyze raw packet
-	for {
-		// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
-		buffer := make([]byte, 4096)
-		now := time.Now()
-		num, err := file.Read(buffer)
-		if err != nil {
-			log.Fatal(err)
-			break
-		} else {
-			binaryData := buffer[:num]
-			fmt.Printf("%d:%d:%d.%d\n", now.Hour(), now.Minute(), now.Second(), now.Nanosecond())
-
-			err := analyzePacket(binaryData, num)
+	if *w != "none" {
+		f, _ := os.Create(*w)
+		writer := newWriter(f)
+		writer.writeFileHeader(65536, LinkTypeEthernet)
+		f.Close()
+		for {
+			f, _ := os.OpenFile(*w, os.O_APPEND|os.O_WRONLY, 0700)
+			writer := newWriter(f)
+			// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
+			buffer := make([]byte, 4096)
+			num, err := file.Read(buffer)
 			if err != nil {
 				log.Fatal(err)
 				break
+			} else {
+				binaryData := buffer[:num]
+
+				writer.writePacket(num, num, binaryData)
+				f.Close()
+				err := analyzePacket(binaryData, num)
+				if err != nil {
+					log.Fatal(err)
+					break
+				}
+			}
+		}
+	} else {
+		for {
+			// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
+			buffer := make([]byte, 4096)
+			num, err := file.Read(buffer)
+			if err != nil {
+				log.Fatal(err)
+				break
+			} else {
+				binaryData := buffer[:num]
+
+				err := analyzePacket(binaryData, num)
+				if err != nil {
+					log.Fatal(err)
+					break
+				}
 			}
 		}
 	}
