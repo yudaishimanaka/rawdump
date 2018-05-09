@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"fmt"
 	"time"
+	"flag"
 )
 
 const (
@@ -28,14 +29,24 @@ func main() {
 	// defer close fd
 	defer syscall.Close(fd)
 
-	// argument check
-	if len(os.Args) != 2 {
-		err := "device not found. please check machine interface."
+	// get flag
+	var (
+		d = flag.String("d", "", "-d: device(network interface)")
+		w = flag.String("w", "none", "-w: data write pcap file")
+		r = flag.String("r", "none", "-r: read pcap file")
+	)
+
+	flag.Parse()
+
+	if *d == "" {
+		err := "please select device(network interface)."
 		log.Fatal(err)
 	}
 
+	log.Println(*w, *r)
+
 	// get interface name from argument
-	interfaceName := string(os.Args[1])
+	interfaceName := *d
 
 	// check interface exist
 	interfaceIndex, err := net.InterfaceByName(interfaceName)
