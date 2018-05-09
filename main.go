@@ -1,13 +1,13 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net"
 	"os"
 	"syscall"
-	"fmt"
 	"time"
-	"flag"
 )
 
 const (

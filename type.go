@@ -8,10 +8,10 @@ const (
 	EthTypeIpx     uint16 = 0x8137
 	EthTypeIpv6    uint16 = 0x86dd
 
-	OpCodeRequest	uint16 = 0x0001
-	OpCodeReply		uint16 = 0x0002
-	OpCodeReqRev	uint16 = 0x0003
-	OpCodeRepRev	uint16 = 0x0004
+	OpCodeRequest uint16 = 0x0001
+	OpCodeReply   uint16 = 0x0002
+	OpCodeReqRev  uint16 = 0x0003
+	OpCodeRepRev  uint16 = 0x0004
 
 	ProtoTypeIcmp uint8 = 0x01
 	ProtoTypeTcp  uint8 = 0x06

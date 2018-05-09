@@ -41,13 +41,13 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 	// marshal IP(v4) header
 	var version, ihl, flags uint8
 	var offset uint16
-	version = buf[:1][0]>>4
-	ihl = buf[:1][0]<<4>>4
+	version = buf[:1][0] >> 4
+	ihl = buf[:1][0] << 4 >> 4
 	serviceType := buf[1:2][0]
 	totalLen := binary.BigEndian.Uint16(buf[2:4])
 	identification := binary.BigEndian.Uint16(buf[4:6])
-	flags = buf[6:7][0]>>5
-	offset = binary.BigEndian.Uint16(buf[6:8])<<3>>3
+	flags = buf[6:7][0] >> 5
+	offset = binary.BigEndian.Uint16(buf[6:8]) << 3 >> 3
 	ttl := buf[8:9][0]
 	nextProto := buf[9:10][0]
 	checkSum := binary.BigEndian.Uint16(buf[10:12])
@@ -56,18 +56,18 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 	upLayerData := buf[20:num]
 
 	ih := &IpHeader{
-		IpVersion: version,
-		HeaderLen: ihl,
-		ServiceType: serviceType,
-		TotalLen: totalLen,
+		IpVersion:      version,
+		HeaderLen:      ihl,
+		ServiceType:    serviceType,
+		TotalLen:       totalLen,
 		Identification: identification,
-		Flags: flags,
+		Flags:          flags,
 		FragmentOffset: offset,
-		TTL: ttl,
-		NextProto: nextProto,
-		CheckSum: checkSum,
-		SrcIpAddr: srcIpAddr,
-		DstIpAddr: dstIpAddr,
+		TTL:            ttl,
+		NextProto:      nextProto,
+		CheckSum:       checkSum,
+		SrcIpAddr:      srcIpAddr,
+		DstIpAddr:      dstIpAddr,
 	}
 
 	// check ip protocol type and switch case
@@ -103,9 +103,9 @@ func analyzeIpv6(buf []byte, num int) (err error) {
 	// marshal IPv6 header
 	var trafficClass uint16
 	var flowLabel uint32
-	ip6Version := buf[:1][0]>>4
-	trafficClass = binary.BigEndian.Uint16(buf[:2])<<4>>8
-	flowLabel = binary.BigEndian.Uint32(buf[:4])<<12>>12
+	ip6Version := buf[:1][0] >> 4
+	trafficClass = binary.BigEndian.Uint16(buf[:2]) << 4 >> 8
+	flowLabel = binary.BigEndian.Uint32(buf[:4]) << 12 >> 12
 	payloadLen := binary.BigEndian.Uint16(buf[4:6])
 	nextHeader := buf[6:7][0]
 	hopLimit := buf[7:8][0]
@@ -114,14 +114,14 @@ func analyzeIpv6(buf []byte, num int) (err error) {
 	upLayerData := buf[40:num]
 
 	ih6 := &Ipv6Header{
-		Ipv6Version: ip6Version,
+		Ipv6Version:  ip6Version,
 		TrafficClass: trafficClass,
-		FlowLabel: flowLabel,
-		PayloadLen: payloadLen,
-		NextHeader: nextHeader,
-		HopLimit: hopLimit,
-		SrcIpv6Addr: srcIp6Addr,
-		DstIpv6Addr: dstIp6Addr,
+		FlowLabel:    flowLabel,
+		PayloadLen:   payloadLen,
+		NextHeader:   nextHeader,
+		HopLimit:     hopLimit,
+		SrcIpv6Addr:  srcIp6Addr,
+		DstIpv6Addr:  dstIp6Addr,
 	}
 
 	// check ipv6 protocol type and switch case
@@ -178,25 +178,25 @@ func analyzeTcp(buf []byte, num int) (err error) {
 	dstPort := binary.BigEndian.Uint16(buf[2:4])
 	seqNum := binary.BigEndian.Uint32(buf[4:8])
 	ackNum := binary.BigEndian.Uint32(buf[8:12])
-	headerLen = buf[12:13][0]>>4
-	reservation = binary.BigEndian.Uint16(buf[12:14])<<4>>10
-	ctrlFlag = buf[13:14][0]<<2>>2
+	headerLen = buf[12:13][0] >> 4
+	reservation = binary.BigEndian.Uint16(buf[12:14]) << 4 >> 10
+	ctrlFlag = buf[13:14][0] << 2 >> 2
 	windowSize := binary.BigEndian.Uint16(buf[14:16])
 	checkSum := binary.BigEndian.Uint16(buf[16:18])
 	urgPointer := binary.BigEndian.Uint16(buf[18:20])
 	data := buf[20:num]
 
 	tcph := &TCPHeader{
-		SrcPortNum: srcPort,
-		DstPortNum: dstPort,
+		SrcPortNum:  srcPort,
+		DstPortNum:  dstPort,
 		SequenceNum: seqNum,
-		AckNwlNum: ackNum,
-		HeaderLen: headerLen,
+		AckNwlNum:   ackNum,
+		HeaderLen:   headerLen,
 		Reservation: reservation,
-		CtrlFlag: ctrlFlag,
-		WindowSize: windowSize,
-		CheckSum: checkSum,
-		UrgPointer: urgPointer,
+		CtrlFlag:    ctrlFlag,
+		WindowSize:  windowSize,
+		CheckSum:    checkSum,
+		UrgPointer:  urgPointer,
 	}
 
 	printTcp(tcph, data)
@@ -214,8 +214,8 @@ func analyzeUdp(buf []byte, num int) (err error) {
 	udph := &UDPHeader{
 		SrcPortNum: srcPort,
 		DstPortNum: dstPort,
-		PacketLen: packetLen,
-		CheckSum: checkSum,
+		PacketLen:  packetLen,
+		CheckSum:   checkSum,
 	}
 
 	printUdp(udph, data)

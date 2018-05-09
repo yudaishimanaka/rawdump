@@ -60,7 +60,7 @@ type TCPHeader struct {
 	SequenceNum uint32
 	AckNwlNum   uint32
 	HeaderLen   uint8
-	Reservation	uint16
+	Reservation uint16
 	CtrlFlag    uint8
 	WindowSize  uint16
 	CheckSum    uint16
@@ -75,12 +75,19 @@ type UDPHeader struct {
 }
 
 // pcap header
-type pcapHeader struct {
-	MagicNum	uint32
-	VerMajor	uint16
-	VerMinor	uint16
-	Zone		uint32
-	Sigfigs		uint32
-	SnapLen		uint32
-	Network		uint32
+type pcapFileHeader struct {
+	MagicNum uint32
+	VerMajor uint16
+	VerMinor uint16
+	Zone     uint32
+	Sigfigs  uint32
+	SnapLen  uint32
+	Network  uint32
+}
+
+type pcapPacketHeader struct {
+	TsSec   uint32
+	TsUSec  uint32
+	InclLen uint32
+	OrigLen uint32
 }
