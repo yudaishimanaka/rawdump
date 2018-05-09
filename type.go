@@ -30,4 +30,41 @@ const (
 	Icmp6DstUnreath uint8 = 0x01
 	Icmp6Echoreq    uint8 = 0x80
 	Icmp6Echoreply  uint8 = 0x81
+
+	// link type
+	LinkTypeNull           uint8 = 0
+	LinkTypeEthernet       uint8 = 1
+	LinkTypeAX25           uint8 = 3
+	LinkTypeTokenRing      uint8 = 6
+	LinkTypeArcNet         uint8 = 7
+	LinkTypeSLIP           uint8 = 8
+	LinkTypePPP            uint8 = 9
+	LinkTypeFDDI           uint8 = 10
+	LinkTypePPP_HDLC       uint8 = 50
+	LinkTypePPPEthernet    uint8 = 51
+	LinkTypeATM_RFC1483    uint8 = 100
+	LinkTypeRaw            uint8 = 101
+	LinkTypeC_HDLC         uint8 = 104
+	LinkTypeIEEE802_11     uint8 = 105
+	LinkTypeFRelay         uint8 = 107
+	LinkTypeLoop           uint8 = 108
+	LinkTypeLinuxSLL       uint8 = 113
+	LinkTypeLTalk          uint8 = 114
+	LinkTypePFLog          uint8 = 117
+	LinkTypePrismHeader    uint8 = 119
+	LinkTypeIPOverFC       uint8 = 122
+	LinkTypeSunATM         uint8 = 123
+	LinkTypeIEEE80211Radio uint8 = 127
+	LinkTypeARCNetLinux    uint8 = 129
+	LinkTypeIPOver1394     uint8 = 138
+	LinkTypeMTP2Phdr       uint8 = 139
+	LinkTypeMTP2           uint8 = 140
+	LinkTypeMTP3           uint8 = 141
+	LinkTypeSCCP           uint8 = 142
+	LinkTypeDOCSIS         uint8 = 143
+	LinkTypeLinuxIRDA      uint8 = 144
+	LinkTypeLinuxLAPD      uint8 = 177
+	LinkTypeLinuxUSB       uint8 = 220
+	LinkTypeIPv4           uint8 = 228
+	LinkTypeIPv6           uint8 = 229
 )
