@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
-	"io"
 	"encoding/binary"
+	"io"
+	"log"
 	"time"
 )
 
@@ -17,9 +17,9 @@ type Writer struct {
 
 const (
 	magicMicroseconds = 0xA1B2C3D4
-	versionMajor = 2
-	versionMinor = 4
-	nanosPerMicro = 1000
+	versionMajor      = 2
+	versionMinor      = 4
+	nanosPerMicro     = 1000
 )
 
 func newWriter(w io.Writer) *Writer {
@@ -27,7 +27,7 @@ func newWriter(w io.Writer) *Writer {
 }
 
 func (w *Writer) writeFileHeader(snaplen uint32, linktype uint8) error {
-	var buf[24]byte
+	var buf [24]byte
 	binary.LittleEndian.PutUint32(buf[0:4], magicMicroseconds)
 	binary.LittleEndian.PutUint16(buf[4:6], versionMajor)
 	binary.LittleEndian.PutUint16(buf[6:8], versionMinor)
