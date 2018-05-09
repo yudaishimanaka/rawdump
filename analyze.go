@@ -74,21 +74,21 @@ func analyzeIpv4(buf []byte, num int) (err error) {
 	switch ih.NextProto {
 	case ProtoTypeIcmp:
 		printIpv4(ih)
-		err := analyzeIcmp(upLayerData, num)
+		err := analyzeIcmp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
 
 	case ProtoTypeTcp:
 		printIpv4(ih)
-		err := analyzeTcp(upLayerData, num)
+		err := analyzeTcp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
 
 	case ProtoTypeUdp:
 		printIpv4(ih)
-		err := analyzeUdp(upLayerData, num)
+		err := analyzeUdp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
@@ -128,21 +128,21 @@ func analyzeIpv6(buf []byte, num int) (err error) {
 	switch ih6.NextHeader {
 	case NxtHeadIcmp6:
 		printIpv6(ih6)
-		err := analyzeIcmp(upLayerData, num)
+		err := analyzeIcmp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
 
 	case NxtHeadTcp:
 		printIpv6(ih6)
-		err := analyzeTcp(upLayerData, num)
+		err := analyzeTcp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
 
 	case NxtHeadUdp:
 		printIpv6(ih6)
-		err := analyzeUdp(upLayerData, num)
+		err := analyzeUdp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
@@ -238,21 +238,21 @@ func analyzePacket(buf []byte, num int) (err error) {
 	switch eh.ProtoType {
 	case EthTypeArp:
 		printEther(eh)
-		err := analyzeArp(upLayerData, num)
+		err := analyzeArp(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
 
 	case EthTypeIpv4:
 		printEther(eh)
-		err := analyzeIpv4(upLayerData, num)
+		err := analyzeIpv4(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
 
 	case EthTypeIpv6:
 		printEther(eh)
-		err := analyzeIpv6(upLayerData, num)
+		err := analyzeIpv6(upLayerData, len(upLayerData))
 		if err != nil {
 			return err
 		}
