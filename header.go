@@ -73,9 +73,3 @@ type UDPHeader struct {
 	PacketLen  uint16
 	CheckSum   uint16
 }
-
-type ICMPv6Header struct {
-	ICMPv6Type uint8
-	ICMPv6Code uint8
-	CheckSum   uint16
-}
