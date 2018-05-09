@@ -22,11 +22,11 @@ const (
 	nanosPerMicro     = 1000
 )
 
-func newWriter(w io.Writer) *Writer {
+func NewWriter(w io.Writer) *Writer {
 	return &Writer{w: w}
 }
 
-func (w *Writer) writeFileHeader(snaplen uint32, linktype uint8) error {
+func (w *Writer) WriteFileHeader(snaplen uint32, linktype uint8) error {
 	var buf [24]byte
 	binary.LittleEndian.PutUint32(buf[0:4], magicMicroseconds)
 	binary.LittleEndian.PutUint16(buf[4:6], versionMajor)
@@ -49,7 +49,7 @@ func (w *Writer) writePacketHeader(inclLen, origLen int) error {
 	return err
 }
 
-func (w *Writer) writePacket(incLen, origLen int, data []byte) error {
+func (w *Writer) WritePacket(incLen, origLen int, data []byte) error {
 	if incLen != len(data) {
 		log.Fatal("capture length does not match data length")
 	}
