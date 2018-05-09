@@ -37,8 +37,29 @@ func main() {
 	flag.Parse()
 
 	if *d == "" {
-		err := "please select device(network interface)."
-		log.Fatal(err)
+		if *r == "" {
+			err := "please select device(network interface)."
+			log.Fatal(err)
+		} else {
+			f, _ := os.Open(*r)
+			defer f.Close()
+			r, err := NewReader(f)
+			if err != nil {
+				log.Fatal(err)
+			}
+			for {
+				data, _, _, _, err := r.ReadPacketData()
+				if err != nil {
+					log.Fatal(err)
+					break
+				}
+
+				if err := analyzePacket(data, len(data)); err != nil {
+					log.Fatal(err)
+					break
+				}
+			}
+		}
 	}
 
 	log.Println(*w, *r)
