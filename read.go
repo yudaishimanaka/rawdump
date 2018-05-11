@@ -4,9 +4,9 @@ import (
 	"bufio"
 	"compress/gzip"
 	"encoding/binary"
-	"io"
 	"errors"
 	"fmt"
+	"io"
 	"time"
 )
 
@@ -22,11 +22,11 @@ type Reader struct {
 }
 
 const (
-	magicNanosecounds = 0xA1B23C4D
+	magicNanosecounds           = 0xA1B23C4D
 	magicMicrosecoundsBigendian = 0xD4C3B2A1
-	magicNanosecoundsBigendian = 0x4D3CB2A1
-	magicGzip1 = 0x1f
-	magicGzip2 = 0x8b
+	magicNanosecoundsBigendian  = 0x4D3CB2A1
+	magicGzip1                  = 0x1f
+	magicGzip2                  = 0x8b
 )
 
 func NewReader(r io.Reader) (*Reader, error) {
