@@ -29,9 +29,10 @@ func main() {
 
 	// get flag
 	var (
-		d = flag.String("d", "", "-d: device(network interface)")
-		w = flag.String("w", "none", "-w: data write pcap file")
-		r = flag.String("r", "none", "-r: read pcap file")
+		d = flag.String("d", "", "-d [device]: device(network interface)")
+		w = flag.String("w", "none", "-w [filename]: data write pcap file")
+		r = flag.String("r", "none", "-r [filename]: read pcap file")
+		p = flag.Int("p", 0, "-p [port]: filter port")
 	)
 
 	flag.Parse()
