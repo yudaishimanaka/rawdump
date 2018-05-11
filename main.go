@@ -32,13 +32,13 @@ func main() {
 		d = flag.String("d", "", "-d [device]: device(network interface)")
 		w = flag.String("w", "none", "-w [filename]: data write pcap file")
 		r = flag.String("r", "none", "-r [filename]: read pcap file")
-		p = flag.Int("p", 0, "-p [port]: filter port")
+		f = flag.String("f", "none", "-f [filter]: filter")
 	)
 
 	flag.Parse()
 
 	// flag management
-	var dFlag, wFlag, rFlag, pFlag bool
+	var dFlag, wFlag, rFlag, fFlag bool
 
 	if *d != "" {
 		dFlag = true
@@ -52,14 +52,15 @@ func main() {
 		rFlag = true
 	}
 
-	if *p != 0 {
-		pFlag = true
+	if *f != "none" {
+		fFlag = true
 	}
 
 	// check the dFlag before initializing the raw socket
 	if dFlag == false {
 		if rFlag == true {
-			if pFlag == true {
+			if fFlag == true {
+				log.Println(*f)
 				log.Fatal("None of processing.\n")
 			} else {
 				f, _ := os.Open(*r)
@@ -110,9 +111,10 @@ func main() {
 
 	// check flag and processing
 	if dFlag == true {
-		if wFlag == true && pFlag == true {
+		if wFlag == true && fFlag == true {
+			log.Println(*f)
 			log.Fatal("None of processing.\n")
-		} else if wFlag == true && pFlag == false {
+		} else if wFlag == true && fFlag == false {
 			f, _ := os.Create(*w)
 			writer := NewWriter(f)
 			writer.WriteFileHeader(65536, LinkTypeEthernet)
@@ -138,7 +140,8 @@ func main() {
 					}
 				}
 			}
-		} else if wFlag == false && pFlag == true {
+		} else if wFlag == false && fFlag == true {
+			log.Println(*f)
 			log.Fatal("None of processing.\n")
 		} else {
 			for {
