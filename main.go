@@ -37,35 +37,56 @@ func main() {
 
 	flag.Parse()
 
-	if *d == "" {
-		if *r == "" {
-			err := "please select device(network interface)."
-			log.Fatal(err)
-		} else {
-			f, _ := os.Open(*r)
-			defer f.Close()
-			r, err := NewReader(f)
-			if err != nil {
-				log.Fatal(err)
-			}
-			for {
-				data, _, _, _, err := r.ReadPacketData()
+	// flag management
+	var dFlag, wFlag, rFlag, pFlag bool
+
+	if *d != "" {
+		dFlag = true
+	}
+
+	if *w != "none" {
+		wFlag = true
+	}
+
+	if *r != "none" {
+		rFlag = true
+	}
+
+	if *p != 0 {
+		pFlag = true
+	}
+
+	// check the dFlag before initializing the raw socket
+	if dFlag == false {
+		if rFlag == true {
+			if pFlag == true {
+				log.Fatal("None of processing.\n")
+			} else {
+				f, _ := os.Open(*r)
+				defer f.Close()
+				r, err := NewReader(f)
 				if err != nil {
 					log.Fatal(err)
-					break
 				}
+				for {
+					data, _, _, _, err := r.ReadPacketData()
+					if err != nil {
+						log.Fatal(err)
+						break
+					}
 
-				if err := analyzePacket(data, len(data)); err != nil {
-					log.Fatal(err)
-					break
+					if err := analyzePacket(data, len(data)); err != nil {
+						log.Fatal(err)
+						break
+					}
 				}
 			}
+		} else {
+			log.Fatal("please select device or put read option")
 		}
 	}
 
-	log.Println(*w, *r)
-
-	// get interface name from argument
+	// get interface name from flag
 	interfaceName := *d
 
 	// check interface exist
@@ -87,48 +108,54 @@ func main() {
 
 	file := os.NewFile(uintptr(fd), "")
 
-	// loop analyze raw packet
-	if *w != "none" {
-		f, _ := os.Create(*w)
-		writer := NewWriter(f)
-		writer.WriteFileHeader(65536, LinkTypeEthernet)
-		f.Close()
-		for {
-			f, _ := os.OpenFile(*w, os.O_APPEND|os.O_WRONLY, 0700)
+	// check flag and processing
+	if dFlag == true {
+		if wFlag == true && pFlag == true {
+			log.Fatal("None of processing.\n")
+		} else if wFlag == true && pFlag == false {
+			f, _ := os.Create(*w)
 			writer := NewWriter(f)
-			// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
-			buffer := make([]byte, 4096)
-			num, err := file.Read(buffer)
-			if err != nil {
-				log.Fatal(err)
-				break
-			} else {
-				binaryData := buffer[:num]
-
-				writer.WritePacket(num, num, binaryData)
-				f.Close()
-				err := analyzePacket(binaryData, num)
+			writer.WriteFileHeader(65536, LinkTypeEthernet)
+			f.Close()
+			for {
+				f, _ := os.OpenFile(*w, os.O_APPEND|os.O_WRONLY, 0700)
+				writer := NewWriter(f)
+				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
+				buffer := make([]byte, 4096)
+				num, err := file.Read(buffer)
 				if err != nil {
 					log.Fatal(err)
 					break
+				} else {
+					binaryData := buffer[:num]
+
+					writer.WritePacket(num, num, binaryData)
+					f.Close()
+					err := analyzePacket(binaryData, num)
+					if err != nil {
+						log.Fatal(err)
+						break
+					}
 				}
 			}
-		}
-	} else {
-		for {
-			// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
-			buffer := make([]byte, 4096)
-			num, err := file.Read(buffer)
-			if err != nil {
-				log.Fatal(err)
-				break
-			} else {
-				binaryData := buffer[:num]
-
-				err := analyzePacket(binaryData, num)
+		} else if wFlag == false && pFlag == true {
+			log.Fatal("None of processing.\n")
+		} else {
+			for {
+				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
+				buffer := make([]byte, 4096)
+				num, err := file.Read(buffer)
 				if err != nil {
 					log.Fatal(err)
 					break
+				} else {
+					binaryData := buffer[:num]
+
+					err := analyzePacket(binaryData, num)
+					if err != nil {
+						log.Fatal(err)
+						break
+					}
 				}
 			}
 		}
