@@ -17,13 +17,15 @@ package main
 #cgo windows,amd64 LDFLAGS: -L C:/WpdPack/Lib/x64 -lwpcap
 #include <stdlib.h>
 #include <stdint.h>
+#include <libbpf/get_iftype.h>
 #include <libbpf/cbpf.h>
 #include <libbpf/filter_comp.h>
 #include <libbpf/bpf_load.h>
 #include <libbpf/ebpf.h>
 #include <libbpf/pcap_helpers.h>
 #include <libbpf/utils.h>
-struct sock_fprog cbpf = {0};
+struct sock_fprog cbpf = {0};void
+filter_try_compile(const char *str, struct sock_fprog *cbpf, int link_type);
 */
 import "C"
 
