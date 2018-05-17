@@ -18,6 +18,7 @@ package main
 #include <stdlib.h>
 #include <stdint.h>
 #include <libbpf/cbpf.h>
+#include <libbpf/filter_comp.h>
 #include <libbpf/bpf_load.h>
 #include <libbpf/ebpf.h>
 #include <libbpf/pcap_helpers.h>
