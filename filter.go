@@ -24,8 +24,7 @@ package main
 #include <libbpf/ebpf.h>
 #include <libbpf/pcap_helpers.h>
 #include <libbpf/utils.h>
-struct sock_fprog cbpf = {0};void
-filter_try_compile(const char *str, struct sock_fprog *cbpf, int link_type);
+struct sock_fprog cbpf = {0};
 */
 import "C"
 
