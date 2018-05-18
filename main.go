@@ -32,13 +32,14 @@ func main() {
 		d = flag.String("d", "", "-d [device]: device(network interface)")
 		w = flag.String("w", "none", "-w [filename]: data write pcap file")
 		r = flag.String("r", "none", "-r [filename]: read pcap file")
-		f = flag.String("f", "none", "-f [filter]: filter")
+		f = flag.String("f", "none", "-f \"[filter]\": filter(e.g. \"tcp and port 12345\")")
+		b = flag.String("b", "none", "-b \"[src_interface] to [dst_interface]\": run bridge mode")
 	)
 
 	flag.Parse()
 
 	// flag management
-	var dFlag, wFlag, rFlag, fFlag bool
+	var dFlag, wFlag, rFlag, fFlag, bFlag bool
 
 	if *d != "" {
 		dFlag = true
@@ -54,6 +55,23 @@ func main() {
 
 	if *f != "none" {
 		fFlag = true
+	}
+
+	if *b != "none" {
+		bFlag = true
+	}
+
+	if bFlag == true {
+		// get forward interface
+		fwdInterface := *b
+
+		// check forward interface
+		interfaceIndex, err := net.InterfaceByName(fwdInterface)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		//
 	}
 
 	// check the dFlag before initializing the raw socket
