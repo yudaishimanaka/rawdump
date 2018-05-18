@@ -73,21 +73,3 @@ type UDPHeader struct {
 	PacketLen  uint16
 	CheckSum   uint16
 }
-
-// pcap header
-type pcapFileHeader struct {
-	MagicNum uint32
-	VerMajor uint16
-	VerMinor uint16
-	Zone     uint32
-	Sigfigs  uint32
-	SnapLen  uint32
-	Network  uint32
-}
-
-type pcapPacketHeader struct {
-	TsSec   uint32
-	TsUSec  uint32
-	InclLen uint32
-	OrigLen uint32
-}
