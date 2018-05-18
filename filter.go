@@ -1,49 +1,33 @@
-/*
-	compliance of BPF
-*/
-
 package main
 
-/*
-#cgo solaris LDFLAGS: -L /opt/local/lib -lpcap
-#cgo linux LDFLAGS: -lpcap
-#cgo dragonfly LDFLAGS: -lpcap
-#cgo freebsd LDFLAGS: -lpcap
-#cgo openbsd LDFLAGS: -lpcap
-#cgo netbsd LDFLAGS: -lpcap
-#cgo darwin LDFLAGS: -lpcap
-#cgo windows CFLAGS: -I C:/WpdPack/Include
-#cgo windows,386 LDFLAGS: -L C:/WpdPack/Lib -lwpcap
-#cgo windows,amd64 LDFLAGS: -L C:/WpdPack/Lib/x64 -lwpcap
-#include <stdlib.h>
-#include <stdint.h>
-#include <libbpf/get_iftype.h>
-#include <libbpf/cbpf.h>
-#include <libbpf/filter_comp.h>
-#include <libbpf/bpf_load.h>
-#include <libbpf/ebpf.h>
-#include <libbpf/pcap_helpers.h>
-#include <libbpf/utils.h>
-struct sock_fprog cbpf = {0};
-*/
-import "C"
-
 import (
-	"unsafe"
+	"time"
+
+	"github.com/google/gopacket/pcap"
 )
 
-func SetBPF(expr, ifname string) error {
-	ccbpf := *C.cbpf
-	cexpr := C.CString(expr)
-	cifname := C.CString(ifname)
-	cbool := C.bool(0)
-	defer C.free(unsafe.Pointer(cexpr))
-	defer C.free(unsafe.Pointer(cifname))
-	defer C.free(unsafe.Pointer(cbool))
+var (
+	snapshot_len int32 = 1024
+	promiscuous bool = true
+	timeout	time.Duration = 30 * time.Second
+)
 
-	C.filter_try_compile(cexpr, ccbpf, C.dev_get_iftype(cifname))
+func compileBPF(expr, ifname string) ([]pcap.BPFInstruction, error) {
+	devices, err := pcap.FindAllDevs()
+	if err != nil {
+		return nil, err
+	}
 
-	C.cbpf_dump_all(ccbpf, cbool)
+	ifname = devices[0].Name
 
-	return nil
+	handle, err := pcap.OpenLive(ifname, snapshot_len, promiscuous, timeout)
+	if err != nil {
+		return nil, err
+	}
+	defer handle.Close()
+
+	var filter string = expr
+	bpfRawInstructions, err := handle.CompileBPFFilter(filter)
+
+	return bpfRawInstructions, nil
 }
