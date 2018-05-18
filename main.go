@@ -210,13 +210,7 @@ func main() {
 				log.Fatal(err)
 			}
 
-			f, _ := os.Create(*w)
-			writer := NewWriter(f)
-			writer.WriteFileHeader(65536, LinkTypeEthernet)
-			f.Close()
 			for {
-				f, _ := os.OpenFile(*w, os.O_APPEND|os.O_WRONLY, 0700)
-				writer := NewWriter(f)
 				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
 				buffer := make([]byte, 4096)
 				num, err := file.Read(buffer)
@@ -226,8 +220,6 @@ func main() {
 				} else {
 					binaryData := buffer[:num]
 
-					writer.WritePacket(num, num, binaryData)
-					f.Close()
 					err := analyzePacket(binaryData, num)
 					if err != nil {
 						log.Fatal(err)
