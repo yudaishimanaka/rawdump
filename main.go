@@ -64,7 +64,30 @@ func main() {
 				if err != nil {
 					log.Fatal(err)
 				}
-				log.Println(data)
+
+				err = SetBPF(fd, data)
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				f, _ := os.Open(*r)
+				defer f.Close()
+				r, err := NewReader(f)
+				if err != nil {
+					log.Fatal(err)
+				}
+				for {
+					data, _, _, _, err := r.ReadPacketData()
+					if err != nil {
+						log.Fatal(err)
+						break
+					}
+
+					if err := analyzePacket(data, len(data)); err != nil {
+						log.Fatal(err)
+						break
+					}
+				}
 			} else {
 				f, _ := os.Open(*r)
 				defer f.Close()
@@ -115,8 +138,41 @@ func main() {
 	// check flag and processing
 	if dFlag == true {
 		if wFlag == true && fFlag == true {
-			log.Println(*f)
-			log.Fatal("None of processing.\n")
+			data, err := CompileBPF(*f, *d)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			err = SetBPF(fd, data)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			f, _ := os.Create(*w)
+			writer := NewWriter(f)
+			writer.WriteFileHeader(65536, LinkTypeEthernet)
+			f.Close()
+			for {
+				f, _ := os.OpenFile(*w, os.O_APPEND|os.O_WRONLY, 0700)
+				writer := NewWriter(f)
+				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
+				buffer := make([]byte, 4096)
+				num, err := file.Read(buffer)
+				if err != nil {
+					log.Fatal(err)
+					break
+				} else {
+					binaryData := buffer[:num]
+
+					writer.WritePacket(num, num, binaryData)
+					f.Close()
+					err := analyzePacket(binaryData, num)
+					if err != nil {
+						log.Fatal(err)
+						break
+					}
+				}
+			}
 		} else if wFlag == true && fFlag == false {
 			f, _ := os.Create(*w)
 			writer := NewWriter(f)
@@ -148,7 +204,37 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			log.Println(data)
+
+			err = SetBPF(fd, data)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			f, _ := os.Create(*w)
+			writer := NewWriter(f)
+			writer.WriteFileHeader(65536, LinkTypeEthernet)
+			f.Close()
+			for {
+				f, _ := os.OpenFile(*w, os.O_APPEND|os.O_WRONLY, 0700)
+				writer := NewWriter(f)
+				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
+				buffer := make([]byte, 4096)
+				num, err := file.Read(buffer)
+				if err != nil {
+					log.Fatal(err)
+					break
+				} else {
+					binaryData := buffer[:num]
+
+					writer.WritePacket(num, num, binaryData)
+					f.Close()
+					err := analyzePacket(binaryData, num)
+					if err != nil {
+						log.Fatal(err)
+						break
+					}
+				}
+			}
 		} else {
 			for {
 				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
