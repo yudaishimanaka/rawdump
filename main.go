@@ -62,16 +62,40 @@ func main() {
 	}
 
 	if bFlag == true {
-		// get forward interface
-		fwdInterface := *b
-
-		// check forward interface
-		interfaceIndex, err := net.InterfaceByName(fwdInterface)
+		// fwdInterface fd
+		fd2, err := syscall.Socket(syscall.AF_PACKET, syscall.SOCK_RAW, int(htons(syscall.ETH_P_ALL)))
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		//
+		// get forward interface
+		fwdInterface := *b
+
+		// check interface and get interfaceIndex
+		interfaceIndex1, err := net.InterfaceByName("wlp3s0")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		interfaceIndex2, err := net.InterfaceByName(fwdInterface)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// bind interface
+		addr1 := syscall.SockaddrLinklayer{Protocol: htons(syscall.ETH_P_ALL), Ifindex: interfaceIndex1.Index}
+		if err := syscall.Bind(fd, &addr1); err != nil {
+			log.Fatal(err)
+		}
+
+		addr2 := syscall.SockaddrLinklayer{Protocol: htons(syscall.ETH_P_ALL), Ifindex: interfaceIndex2.Index}
+		if err := syscall.Bind(fd2, &addr2); err != nil {
+			log.Fatal(err)
+		}
+
+		DisableIpForward()
+
+		Bridge()
 	}
 
 	// check the dFlag before initializing the raw socket
