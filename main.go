@@ -60,8 +60,11 @@ func main() {
 	if dFlag == false {
 		if rFlag == true {
 			if fFlag == true {
-				log.Println(*f)
-				log.Fatal("None of processing.\n")
+				data, err := CompileBPF(*f, *d)
+				if err != nil {
+					log.Fatal(err)
+				}
+				log.Println(data)
 			} else {
 				f, _ := os.Open(*r)
 				defer f.Close()
@@ -141,8 +144,11 @@ func main() {
 				}
 			}
 		} else if wFlag == false && fFlag == true {
-			log.Println(*f)
-			log.Fatal("None of processing.\n")
+			data, err := CompileBPF(*f, *d)
+			if err != nil {
+				log.Fatal(err)
+			}
+			log.Println(data)
 		} else {
 			for {
 				// buffer size is 4096 ~ 65535, AWS spew errors even at 4096 byes
