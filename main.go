@@ -6,15 +6,30 @@ import (
 	"net"
 	"os"
 	"syscall"
+	"regexp"
 )
 
 const (
 	exitCodeOk = iota
 	exitCodeErr
+
+	regexString = `^([a-zA-Z0-9]*)\sto\s([a-zA-Z0-9]*)$`
 )
 
 func htons(host uint16) uint16 {
 	return (host&0xff)<<8 | (host >> 8)
+}
+
+
+var r = regexp.MustCompile(regexString)
+
+func parseBridgeString(expr string) []string {
+	var array []string
+	for i := range r.FindStringSubmatch(expr) {
+		result := r.FindStringSubmatch(expr)[i]
+		array = append(array, result)
+	}
+	return array
 }
 
 func main() {
@@ -62,22 +77,22 @@ func main() {
 	}
 
 	if bFlag == true {
-		// fwdInterface fd
+		// fwdInterface fd or soc
 		fd2, err := syscall.Socket(syscall.AF_PACKET, syscall.SOCK_RAW, int(htons(syscall.ETH_P_ALL)))
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		// get forward interface
-		fwdInterface := *b
+		result := parseBridgeString(*b)
 
 		// check interface and get interfaceIndex
-		interfaceIndex1, err := net.InterfaceByName("wlp3s0")
+		interfaceIndex1, err := net.InterfaceByName(result[1])
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		interfaceIndex2, err := net.InterfaceByName(fwdInterface)
+		interfaceIndex2, err := net.InterfaceByName(result[2])
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -93,9 +108,12 @@ func main() {
 			log.Fatal(err)
 		}
 
+		device[0].soc = int32(fd)
+		device[1].soc = int32(fd2)
+
 		DisableIpForward()
 
-		Bridge()
+		Bridge(device[0], device[1])
 	}
 
 	// check the dFlag before initializing the raw socket

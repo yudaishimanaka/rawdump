@@ -6,28 +6,29 @@ import (
 	"os"
 )
 
-type Param struct {
-	Device1	 string
-	Device2  string
-	DebugOut int
-}
-
 type Dev struct {
 	soc	int32
 }
 
-func Bridge() error {
+var device [2]Dev
+
+func Bridge(device0, device1 Dev) error {
 	var nReady, i, size int
 	var err error
+	var target1, target2 unix.PollFd
 	var targets []unix.PollFd
-	var device [2]Dev
-	// buffer := make([]byte, 4096)
-	// var param = Param{"wlp3s0", "enp0s25", 1}
+	var devices [2]Dev
+	devices[0] = device0
+	devices[1] = device1
+	buffer := make([]byte, 4096)
 
-	targets[0].Fd = device[0].soc
-	targets[0].Events = unix.POLLIN|unix.POLLERR
-	targets[1].Fd = device[1].soc
-	targets[1].Events = unix.POLLIN|unix.POLLERR
+	target1.Fd = devices[0].soc
+	target1.Events = unix.POLLIN|unix.POLLERR
+	target2.Fd = device[1].soc
+	target2.Events = unix.POLLIN|unix.POLLERR
+
+	targets = append(targets, target1)
+	targets = append(targets, target2)
 
 	for {
 		nReady, err = unix.Poll(targets, 100)
@@ -46,15 +47,24 @@ func Bridge() error {
 		default:
 			for i = 0; i < 2; i++ {
 				if targets[i].Revents&(unix.POLLIN|unix.POLLERR) == 0 {
-					log.Println("read")
+					if size, err = unix.Read(int(devices[i].soc), buffer); size <= 0 {
+						log.Printf("Read Error\n")
+					}
 				} else {
-					// size variable use block
 					log.Println(size)
+					if err := analyzePacket(buffer, size); err != nil {
+						log.Fatal(err)
+					} else {
+						if size, err = unix.Read(int(devices[^i].soc), buffer); size <= 0 {
+							log.Printf("Write Error\n")
+						}
+					}
 				}
 			}
 			break
 		}
 	}
+	return nil
 }
 
 func DisableIpForward() error {
