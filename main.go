@@ -5,8 +5,8 @@ import (
 	"log"
 	"net"
 	"os"
-	"syscall"
 	"regexp"
+	"syscall"
 )
 
 const (
@@ -19,7 +19,6 @@ const (
 func htons(host uint16) uint16 {
 	return (host&0xff)<<8 | (host >> 8)
 }
-
 
 var r = regexp.MustCompile(regexString)
 

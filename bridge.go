@@ -1,13 +1,13 @@
 package main
 
 import (
-	"log"
 	"golang.org/x/sys/unix"
+	"log"
 	"os"
 )
 
 type Dev struct {
-	soc	int32
+	soc int32
 }
 
 var device [2]Dev
@@ -23,9 +23,9 @@ func Bridge(device0, device1 Dev) error {
 	buffer := make([]byte, 4096)
 
 	target1.Fd = devices[0].soc
-	target1.Events = unix.POLLIN|unix.POLLERR
+	target1.Events = unix.POLLIN | unix.POLLERR
 	target2.Fd = device[1].soc
-	target2.Events = unix.POLLIN|unix.POLLERR
+	target2.Events = unix.POLLIN | unix.POLLERR
 
 	targets = append(targets, target1)
 	targets = append(targets, target2)
@@ -36,7 +36,7 @@ func Bridge(device0, device1 Dev) error {
 			return err
 		}
 
-		switch nReady{
+		switch nReady {
 		case -1:
 			log.Println("poll")
 			break
