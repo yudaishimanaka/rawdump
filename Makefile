@@ -1,6 +1,6 @@
 GOCMD=go
 GOBUILD=$(GOCMD) build
-BINARY_NAME=pcap
+BINARY_NAME=rawdump
 
 all: build
 build:

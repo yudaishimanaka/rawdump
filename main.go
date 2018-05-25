@@ -127,7 +127,7 @@ func main() {
 				err = SetBPF(fd, data)
 				if err != nil {
 					log.Fatal(err)
-				}
+					}
 
 				f, _ := os.Open(*r)
 				defer f.Close()
