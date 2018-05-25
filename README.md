@@ -1,4 +1,4 @@
-# PcapGo
+# rawdump
 Raw socket packet capture.
 
 Golang
