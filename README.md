@@ -5,7 +5,7 @@ Simple raw socket packet capture.
 ![demo](https://github.com/yudaishimanaka/rawdump/blob/master/rawdump-demo.gif)
 
 ## Requirement
-- Golang 1.10
+- Golang 1.10 ~
 - External package
   - golang.org/x/sys/unix
   - github.com/google/gopacket/pcap
