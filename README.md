@@ -24,7 +24,7 @@ e.g.) `sudo rawdump -d eth0 -f "tcp and port 80"`
 *`-f`* : Filtering based on `tcpdump`. Filter string enclosed in double quotes after option.  
 *`-w`* : Write the results of the capture to the pcap file. File name after option.  
 *`-r`* : Read pcap file. File name after option.  
-*`-b`* : Bridge capture mode. e.g.) `suod rawdump -b "eht0 to eth1"`  
+*`-b`* : Bridge capture mode. e.g.) `sudo rawdump -b "eht0 to eth1"`  
 
 ## License
 The MIT License (MIT) -see `LICENSE` for more details.  
