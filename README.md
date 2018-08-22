@@ -27,4 +27,4 @@ e.g.) `sudo rawdump -d eth0 -f "tcp and port 80"`
 *`-b`* : Bridge capture mode. e.g.) `suod rawdump -b "eht0 to eth1"`  
 
 ## License
-The MIT License (MIT) -see LICENSE for more details.  
+The MIT License (MIT) -see `LICENSE` for more details.  
